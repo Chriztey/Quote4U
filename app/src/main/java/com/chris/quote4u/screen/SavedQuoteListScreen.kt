@@ -1,5 +1,6 @@
 package com.chris.quote4u.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,12 +36,19 @@ import androidx.compose.ui.unit.dp
 import com.chris.quote4u.R
 import com.chris.quote4u.component.BottomDrawerOpener
 import com.chris.quote4u.component.BottomDrawerSheet
+import com.chris.quote4u.component.DeleteDialogBox
 
 @Composable
 @Preview
 fun SavedQuoteListScreen() {
 
+    val context = LocalContext.current
+
     var openDrawer by remember {
+        mutableStateOf(false)
+    }
+
+    var openDeleteDialog by remember {
         mutableStateOf(false)
     }
 
@@ -82,9 +91,15 @@ fun SavedQuoteListScreen() {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
 
-                ListItemCard(Alignment.TopStart)
+                ListItemCard(
+                    alignment = Alignment.TopStart,
+                    onDeleteButtonClick = {openDeleteDialog = true}
+                    )
 
-                ListItemCard(Alignment.TopEnd)
+                ListItemCard(
+                    alignment = Alignment.TopEnd,
+                    onDeleteButtonClick = {openDeleteDialog = true}
+                    )
 
             }
 
@@ -99,6 +114,13 @@ fun SavedQuoteListScreen() {
                     buttonText = "Back to Home"
                 )
             }
+
+            if (openDeleteDialog) {
+                DeleteDialogBox(
+                    dismissDialog = {openDeleteDialog = false},
+                    confirmButton = {Toast.makeText(context,"Item removed",Toast.LENGTH_SHORT).show()}
+                )
+            }
         }
     }
 
@@ -106,7 +128,8 @@ fun SavedQuoteListScreen() {
 
 @Composable
 fun ListItemCard(
-    alignment: Alignment
+    alignment: Alignment,
+    onDeleteButtonClick: () -> Unit
 ) {
 
     Box(modifier = Modifier
@@ -136,7 +159,7 @@ fun ListItemCard(
 
         IconButton(
             modifier = Modifier.align(alignment),
-            onClick = { /*TODO*/ }) {
+            onClick = { onDeleteButtonClick() }) {
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
