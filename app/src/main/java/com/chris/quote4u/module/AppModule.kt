@@ -27,7 +27,7 @@ object AppModule {
     fun provideMyApi(): QuoteApi {
         return Retrofit.Builder()
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl("https://api.quotable.io/")
+            .baseUrl("https://zenquotes.io/api/")
             .build()
             .create(QuoteApi::class.java)
     }

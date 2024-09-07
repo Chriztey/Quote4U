@@ -16,16 +16,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.chris.quote4u.screen.GetStartedScreen
 import com.chris.quote4u.screen.HomeScreen
 import com.chris.quote4u.screen.SavedQuoteListScreen
+import com.chris.quote4u.screen.TestFetchData
 import com.chris.quote4u.screen.ViewSavedQuoteScreen
 import com.example.compose.Quote4UTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Quote4UTheme {
-                SavedQuoteListScreen()
+                TestFetchData()
             }
         }
     }
