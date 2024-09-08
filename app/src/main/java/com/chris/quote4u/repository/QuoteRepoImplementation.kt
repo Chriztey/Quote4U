@@ -16,7 +16,8 @@ class QuoteRepoImplementation @Inject constructor(
 
         try {
             val q = quoteApi.getRandomQuote()
-            Log.d("Fetch", q[0].q)
+            Log.d("Fetch", q[0].quote)
+            Log.d("Fetch", q[0].author)
         } catch (
             e: Exception
         ) {

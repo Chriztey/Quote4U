@@ -13,7 +13,10 @@ sealed interface QuoteFetchState {
 
 @Serializable
 data class QuoteData(
-    val q : String
+    @SerialName("q")
+    val quote: String,
+    @SerialName("a")
+    val author: String
 //    @SerialName("_id")
 //    val id: String,
 //    // The quotation text
