@@ -6,5 +6,6 @@ import com.chris.quote4u.datasource.QuoteFetchState
 interface QuoteRepo {
     suspend fun getRandomQuote(
         callback: (QuoteFetchState) -> Unit,
-        )
+        result: (List<QuoteData>) -> Unit
+    )
 }

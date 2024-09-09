@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Quote4UTheme {
-                TestFetchData()
+                HomeScreen()
             }
         }
     }

@@ -11,17 +11,23 @@ class QuoteRepoImplementation @Inject constructor(
 ): QuoteRepo {
     override suspend fun getRandomQuote(
         callback: (QuoteFetchState) -> Unit,
+        result: (List<QuoteData>) -> Unit
     ){
         Log.d("Fetch", "Loading")
 
+        callback(QuoteFetchState.Loading)
+
         try {
-            val q = quoteApi.getRandomQuote()
-            Log.d("Fetch", q[0].quote)
-            Log.d("Fetch", q[0].author)
+//            val q = quoteApi.getRandomQuote()
+            result(quoteApi.getRandomQuote())
+            callback(QuoteFetchState.Success)
+//            Log.d("Fetch", q[0].quote)
+//            Log.d("Fetch", q[0].author)
         } catch (
             e: Exception
         ) {
             Log.d("Fetch", e.message.toString())
+            callback(QuoteFetchState.Error(e.message.toString()))
         }
 
 

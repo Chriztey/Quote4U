@@ -25,13 +25,26 @@ class QuotesViewModel @Inject constructor(
     private val _randomQuote = MutableStateFlow(InitialData())
     val randomQuote: StateFlow<InitialData> = _randomQuote.asStateFlow()
 
+    init {
+        getRandomQuote()
+    }
+
 
     fun getRandomQuote() {
 
         viewModelScope.launch {
-            val randomQuote = quoteRepo.getRandomQuote {
-                _quoteFetchState.value = it
-            }
+            quoteRepo.getRandomQuote(
+                callback = {
+                    _quoteFetchState.value = it
+                },
+                result = {
+                    _randomQuote.update {
+                        current -> current.copy(
+                            randomQuote = it[0]
+                        )
+                    }
+                }
+            )
 
 //            _randomQuote.update {
 //                current -> current.copy(
