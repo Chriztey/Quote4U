@@ -17,6 +17,9 @@ interface QuoteDao {
     @Delete
     suspend fun delete (savedQuoteData: SavedQuoteData)
 
+    @Query("SELECT * from savedQuotes WHERE quote = :quote AND author = :author")
+    suspend fun getQuote(quote: String, author: String): SavedQuoteData
+
     @Query("SELECT * from savedQuotes")
     fun getAllSavedQuote(): Flow<List<SavedQuoteData>>
 

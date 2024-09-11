@@ -49,6 +49,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideQuoteDao(database: QuoteDatabase): QuoteDao {
         return database.quoteDao()
     }

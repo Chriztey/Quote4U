@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.chris.quote4u.datasource.InitialData
 import com.chris.quote4u.datasource.QuoteData
 import com.chris.quote4u.datasource.QuoteFetchState
+import com.chris.quote4u.datasource.SavedQuoteData
 import com.chris.quote4u.repository.QuoteRepo
+import com.chris.quote4u.room.repository.SavedQuoteRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuotesViewModel @Inject constructor(
-    private val quoteRepo: QuoteRepo
+    private val quoteRepo: QuoteRepo,
+    private val saveQuoteRepo: SavedQuoteRepo
 ): ViewModel() {
 
     private val _quoteFetchState = MutableStateFlow<QuoteFetchState>(QuoteFetchState.Success)
@@ -45,14 +48,30 @@ class QuotesViewModel @Inject constructor(
                     }
                 }
             )
-
-//            _randomQuote.update {
-//                current -> current.copy(
-//                    randomQuote = randomQuote
-//                )
-//            }
         }
 
     }
 
+    suspend fun saveQuote (quote: SavedQuoteData) {
+        saveQuoteRepo.insertQuote(quote)
+    }
+
+    suspend fun deleteQuote(quote: String, author: String) {
+        saveQuoteRepo.deleteQuote(
+            saveQuoteRepo.getSavedQuote(quote,author)
+        )
+    }
+
+    suspend fun checkQuote(quote: String, author: String, showingQuote: SavedQuoteData): Boolean {
+        return saveQuoteRepo.getSavedQuote(quote, author) == showingQuote
+
+    }
+
+}
+
+fun QuoteData.toSavedQuoteData(): SavedQuoteData {
+    return SavedQuoteData(
+        quote = quote,
+        author = author
+    )
 }

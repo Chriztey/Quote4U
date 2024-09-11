@@ -8,6 +8,11 @@ import javax.inject.Inject
 class SavedQuoteRepoImplementation @Inject constructor(
     private val quoteDao: QuoteDao
 ): SavedQuoteRepo {
+    override suspend fun getSavedQuote(quote: String, author: String): SavedQuoteData {
+        return quoteDao.getQuote(quote, author)
+    }
+
+
     override fun getAllSavedQuote(): Flow<List<SavedQuoteData>> {
        return quoteDao.getAllSavedQuote()
     }

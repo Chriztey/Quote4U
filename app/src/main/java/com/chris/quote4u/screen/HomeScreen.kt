@@ -1,5 +1,6 @@
 package com.chris.quote4u.screen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,10 +34,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,12 +56,18 @@ import com.chris.quote4u.R
 import com.chris.quote4u.component.BottomDrawerOpener
 import com.chris.quote4u.component.BottomDrawerSheet
 import com.chris.quote4u.datasource.QuoteFetchState
+import com.chris.quote4u.datasource.SavedQuoteData
 import com.chris.quote4u.viewmodel.QuotesViewModel
+import com.chris.quote4u.viewmodel.toSavedQuoteData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 //@Preview
 fun HomeScreen(
 ) {
+
+    val scope = rememberCoroutineScope()
 
     val viewModel = hiltViewModel<QuotesViewModel>()
     val randomQuote by viewModel.randomQuote.collectAsState()
@@ -66,12 +75,78 @@ fun HomeScreen(
 
     val context = LocalContext.current
 
-    var saveButtonOnClick by remember {
-        mutableStateOf(false)
-    }
+
+
+
 
     var openDrawer by remember {
         mutableStateOf(false)
+    }
+
+
+    val currentShowingQuote = randomQuote.randomQuote?.toSavedQuoteData()
+
+    suspend fun checkQuote(): Boolean? {
+        //if (currentShowingQuote != null) {
+            return currentShowingQuote?.let {
+                viewModel.checkQuote(
+                    quote = currentShowingQuote.quote,
+                    author = currentShowingQuote.author,
+                    it
+                )
+            }
+        //}
+
+
+    }
+
+    var result: Boolean = false
+
+
+    LaunchedEffect(key1 = "") {
+        if (currentShowingQuote != null) {
+            result = viewModel.checkQuote(
+                quote = currentShowingQuote.quote,
+                author = currentShowingQuote.author,
+                currentShowingQuote
+            )
+        }
+    }
+
+
+
+
+
+    var saveButtonOnClick by remember {
+        mutableStateOf(
+
+            result
+
+        )
+    }
+
+
+
+
+    fun favoriteQuote() {
+        scope.launch {
+            if (currentShowingQuote != null) {
+                viewModel.saveQuote(
+                    currentShowingQuote
+                )
+            }
+        }
+    }
+
+    fun unfavoriteQuote() {
+        scope.launch {
+            if (currentShowingQuote != null) {
+                viewModel.deleteQuote(
+                    quote = currentShowingQuote.quote,
+                    author = currentShowingQuote.author
+                )
+            }
+        }
     }
 
 
@@ -126,7 +201,12 @@ fun HomeScreen(
                         Card(
                             modifier = Modifier
                                 .padding(vertical = 43.dp, horizontal = 16.dp)
-                                .sizeIn(minWidth = 320.dp, minHeight = 186.dp, maxWidth = 320.dp, maxHeight = 186.dp),
+                                .sizeIn(
+                                    minWidth = 320.dp,
+                                    minHeight = 186.dp,
+                                    maxWidth = 320.dp,
+                                    maxHeight = 186.dp
+                                ),
                             shape = RectangleShape,
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary)
                         ) {
@@ -184,14 +264,21 @@ fun HomeScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 38.dp, horizontal = 4.dp),
+                                    .padding(vertical = 32.dp, horizontal = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically // Align vertically if needed
                             ) {
                                 Spacer(modifier = Modifier.weight(1f)) // Pushes the Icon to the end
                                 IconButton(onClick = {
                                     saveButtonOnClick = !saveButtonOnClick
                                     if (saveButtonOnClick == true) {
+
+                                        favoriteQuote()
                                         Toast.makeText(context, "Quote Saved", Toast.LENGTH_SHORT)
+                                            .show()
+                                    } else {
+
+                                        unfavoriteQuote()
+                                        Toast.makeText(context, "Unfavorite Quote", Toast.LENGTH_SHORT)
                                             .show()
                                     }
 
@@ -212,7 +299,10 @@ fun HomeScreen(
 
                     Image(
                         modifier = Modifier
-                            .clickable { viewModel.getRandomQuote() }
+                            .clickable {
+                                saveButtonOnClick = false
+                                viewModel.getRandomQuote()
+                            }
                             .fillMaxWidth()
                             .size(77.dp),
                         painter = painterResource(id = R.drawable.dice),
