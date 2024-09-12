@@ -28,7 +28,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Quote4UTheme {
-                HomeScreen()
+                //HomeScreen()
+                SavedQuoteListScreen()
             }
         }
     }

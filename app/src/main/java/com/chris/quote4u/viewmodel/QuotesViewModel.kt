@@ -10,8 +10,11 @@ import com.chris.quote4u.repository.QuoteRepo
 import com.chris.quote4u.room.repository.SavedQuoteRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +37,16 @@ class QuotesViewModel @Inject constructor(
         getRandomQuote()
         checkQuote()
     }
+
+
+    val savedQuoteList: StateFlow<List<SavedQuoteData>> =
+        saveQuoteRepo.getAllSavedQuote().map {
+            it
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = emptyList()
+        )
 
 
     fun getRandomQuote() {
@@ -62,13 +75,23 @@ class QuotesViewModel @Inject constructor(
         saveQuoteRepo.insertQuote(quote)
     }
 
-    suspend fun deleteQuote(quote: String, author: String) {
+    suspend fun unfavoriteQuote(quote: String, author: String) {
         saveQuoteRepo.deleteQuote(
             saveQuoteRepo.getSavedQuote(quote,author)
         )
     }
 
-    fun checkQuote(){
+    fun deleteSavedQuote (savedQuoteData: SavedQuoteData) {
+        viewModelScope.launch {
+            saveQuoteRepo.deleteQuote(
+                savedQuoteData
+            )
+        }
+    }
+
+
+
+    private fun checkQuote(){
          viewModelScope.launch {
 
              val checking = randomQuote.value.randomQuote?.let {

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -20,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,16 +36,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.quote4u.R
 import com.chris.quote4u.component.BottomDrawerOpener
 import com.chris.quote4u.component.BottomDrawerSheet
 import com.chris.quote4u.component.DeleteDialogBox
+import com.chris.quote4u.datasource.SavedQuoteData
+import com.chris.quote4u.viewmodel.QuotesViewModel
 
 @Composable
 @Preview
 fun SavedQuoteListScreen() {
 
     val context = LocalContext.current
+
+    val viewModel = hiltViewModel<QuotesViewModel>()
+    val savedQuoteList by viewModel.savedQuoteList.collectAsState()
+
+    var selectedQuote by remember {
+        mutableStateOf<SavedQuoteData>(SavedQuoteData(quote = "", author = ""))
+    }
 
     var openDrawer by remember {
         mutableStateOf(false)
@@ -66,7 +79,7 @@ fun SavedQuoteListScreen() {
 
                     .fillMaxSize()
                     .align(Alignment.TopCenter)
-                    .verticalScroll(rememberScrollState())
+                    //.verticalScroll(rememberScrollState())
                     .background(MaterialTheme.colorScheme.background),
                 //color = MaterialTheme.colorScheme.background
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -91,15 +104,35 @@ fun SavedQuoteListScreen() {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
 
-                ListItemCard(
-                    alignment = Alignment.TopStart,
-                    onDeleteButtonClick = {openDeleteDialog = true}
-                    )
+                if (savedQuoteList.isNullOrEmpty()) {
+                    Text(text = "empty")
+                } else {
 
-                ListItemCard(
-                    alignment = Alignment.TopEnd,
-                    onDeleteButtonClick = {openDeleteDialog = true}
-                    )
+                    LazyColumn(
+                        modifier = Modifier.padding(bottom = 48.dp)
+                    ) {
+                       items (savedQuoteList) { quote ->
+
+
+
+                            ListItemCard(
+                                alignment = if (savedQuoteList.indexOf(quote)%2 == 0 ) {
+                                    Alignment.TopStart
+                                } else {Alignment.TopEnd},
+                                onDeleteButtonClick = {
+                                    selectedQuote = quote
+                                    openDeleteDialog = true },
+                                quote = quote.quote
+                            )
+
+                        }
+                    }
+
+
+
+                }
+
+
 
             }
 
@@ -118,7 +151,10 @@ fun SavedQuoteListScreen() {
             if (openDeleteDialog) {
                 DeleteDialogBox(
                     dismissDialog = {openDeleteDialog = false},
-                    confirmButton = {Toast.makeText(context,"Item removed",Toast.LENGTH_SHORT).show()}
+                    confirmButton = {
+                        viewModel.deleteSavedQuote(selectedQuote)
+                        openDeleteDialog = false
+                        Toast.makeText(context,"Item removed",Toast.LENGTH_SHORT).show()}
                 )
             }
         }
@@ -129,7 +165,8 @@ fun SavedQuoteListScreen() {
 @Composable
 fun ListItemCard(
     alignment: Alignment,
-    onDeleteButtonClick: () -> Unit
+    onDeleteButtonClick: () -> Unit,
+    quote: String
 ) {
 
     Box(modifier = Modifier
@@ -147,12 +184,12 @@ fun ListItemCard(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp, horizontal = 4.dp),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                text = "aabhasshsdhsdhsdjshdjsdhjdhsdjshdjdhsakslasklaskalskaslkaslkslaskalskalskaslakaskalsklask")
+                text = quote)
         }
 
 
