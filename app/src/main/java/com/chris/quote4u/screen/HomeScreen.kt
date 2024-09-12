@@ -86,44 +86,29 @@ fun HomeScreen(
 
     val currentShowingQuote = randomQuote.randomQuote?.toSavedQuoteData()
 
-    suspend fun checkQuote(): Boolean? {
-        //if (currentShowingQuote != null) {
-            return currentShowingQuote?.let {
-                viewModel.checkQuote(
-                    quote = currentShowingQuote.quote,
-                    author = currentShowingQuote.author,
-                    it
-                )
-            }
-        //}
 
 
-    }
-
-    var result: Boolean = false
 
 
-    LaunchedEffect(key1 = "") {
-        if (currentShowingQuote != null) {
-            result = viewModel.checkQuote(
-                quote = currentShowingQuote.quote,
-                author = currentShowingQuote.author,
-                currentShowingQuote
-            )
-        }
-    }
+    var saveButtonOnClick = randomQuote.isQuoteFav
+
+    Log.d("Check Q", saveButtonOnClick.toString())
 
 
 
 
 
-    var saveButtonOnClick by remember {
-        mutableStateOf(
 
-            result
 
-        )
-    }
+
+
+//    var saveButtonOnClick by remember {
+//        mutableStateOf(
+//
+//            result
+//
+//        )
+//    }
 
 
 
@@ -228,6 +213,7 @@ fun HomeScreen(
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.Bold,
+                                        //text = "bb"
                                         text = "${randomQuote.randomQuote?.quote}"
                                     )
                                     
@@ -238,6 +224,7 @@ fun HomeScreen(
                                             .fillMaxWidth()
                                             .padding(end = 16.dp, bottom = 8.dp)
                                             .align(Alignment.BottomEnd),
+                                        //text = "aa",
                                         text = "${randomQuote.randomQuote?.author}",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary,
@@ -269,8 +256,8 @@ fun HomeScreen(
                             ) {
                                 Spacer(modifier = Modifier.weight(1f)) // Pushes the Icon to the end
                                 IconButton(onClick = {
-                                    saveButtonOnClick = !saveButtonOnClick
-                                    if (saveButtonOnClick == true) {
+                                    viewModel.savedUnsavedQuote()
+                                    if (saveButtonOnClick == false) {
 
                                         favoriteQuote()
                                         Toast.makeText(context, "Quote Saved", Toast.LENGTH_SHORT)
@@ -300,7 +287,7 @@ fun HomeScreen(
                     Image(
                         modifier = Modifier
                             .clickable {
-                                saveButtonOnClick = false
+                                
                                 viewModel.getRandomQuote()
                             }
                             .fillMaxWidth()

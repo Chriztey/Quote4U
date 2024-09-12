@@ -26,5 +26,6 @@ data class QuoteData(
 )
 
 data class InitialData (
-    val randomQuote: QuoteData? = null
+    val randomQuote: QuoteData? = null,
+    val isQuoteFav: Boolean = false
 )

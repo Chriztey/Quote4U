@@ -28,8 +28,11 @@ class QuotesViewModel @Inject constructor(
     private val _randomQuote = MutableStateFlow(InitialData())
     val randomQuote: StateFlow<InitialData> = _randomQuote.asStateFlow()
 
+
+
     init {
         getRandomQuote()
+        checkQuote()
     }
 
 
@@ -48,6 +51,9 @@ class QuotesViewModel @Inject constructor(
                     }
                 }
             )
+
+            checkQuote()
+
         }
 
     }
@@ -62,9 +68,29 @@ class QuotesViewModel @Inject constructor(
         )
     }
 
-    suspend fun checkQuote(quote: String, author: String, showingQuote: SavedQuoteData): Boolean {
-        return saveQuoteRepo.getSavedQuote(quote, author) == showingQuote
+    fun checkQuote(){
+         viewModelScope.launch {
 
+             val checking = randomQuote.value.randomQuote?.let {
+                 saveQuoteRepo.getSavedQuote(
+                     quote = it.quote,
+                     author = it.author
+                 )
+             } != null
+             _randomQuote.update {
+                     current -> current.copy(
+                 isQuoteFav = checking
+                     )
+             }
+        }
+    }
+
+    fun savedUnsavedQuote() {
+        _randomQuote.update {
+            current -> current.copy(
+                isQuoteFav = !current.isQuoteFav
+            )
+        }
     }
 
 }
