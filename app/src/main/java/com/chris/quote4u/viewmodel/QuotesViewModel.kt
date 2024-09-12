@@ -1,5 +1,6 @@
 package com.chris.quote4u.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chris.quote4u.datasource.InitialData
@@ -31,12 +32,19 @@ class QuotesViewModel @Inject constructor(
     private val _randomQuote = MutableStateFlow(InitialData())
     val randomQuote: StateFlow<InitialData> = _randomQuote.asStateFlow()
 
+    private val _selectedQuote = MutableStateFlow<SavedQuoteData?>(InitialData().savedQuoteOnClick)
+    val selectedQuote: StateFlow<SavedQuoteData?> = _selectedQuote.asStateFlow()
+
+
+
 
 
     init {
         getRandomQuote()
         checkQuote()
+        getQuoteByID(33)
     }
+
 
 
     val savedQuoteList: StateFlow<List<SavedQuoteData>> =
@@ -47,6 +55,26 @@ class QuotesViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = emptyList()
         )
+
+    fun getQuoteByID(id: Int) {
+
+        viewModelScope.launch {
+
+            saveQuoteRepo.getQuoteByID(
+                id
+            ).collect { it ->
+                _selectedQuote.value = it
+            }
+        }
+
+
+
+//            .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000L),
+//            initialValue = null
+//        )
+  }
 
 
     fun getRandomQuote() {

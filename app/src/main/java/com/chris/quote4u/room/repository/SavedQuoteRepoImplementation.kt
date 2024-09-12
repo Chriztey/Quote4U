@@ -17,6 +17,10 @@ class SavedQuoteRepoImplementation @Inject constructor(
        return quoteDao.getAllSavedQuote()
     }
 
+    override fun getQuoteByID(id: Int): Flow<SavedQuoteData >{
+        return quoteDao.getQuoteByID(id)
+    }
+
     override suspend fun insertQuote(savedQuoteData: SavedQuoteData) {
         quoteDao.insert(savedQuoteData)
     }

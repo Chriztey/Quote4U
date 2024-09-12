@@ -53,6 +53,7 @@ import kotlinx.coroutines.launch
 @Composable
 //@Preview
 fun HomeScreen(
+    navigateToSavedQuotes: () -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
@@ -280,6 +281,7 @@ fun HomeScreen(
 
             if (openDrawer) {
                 BottomDrawerSheet(
+                    onButtonClick = {navigateToSavedQuotes()},
                     onDismissBottomSheet = {openDrawer = false},
                     buttonText = "Saved Quotes"
                 )

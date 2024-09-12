@@ -9,6 +9,8 @@ interface SavedQuoteRepo {
 
     fun getAllSavedQuote(): Flow<List<SavedQuoteData>>
 
+    fun getQuoteByID(id: Int): Flow<SavedQuoteData>
+
     suspend fun insertQuote (savedQuoteData: SavedQuoteData)
 
     suspend fun deleteQuote (savedQuoteData: SavedQuoteData)

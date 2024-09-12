@@ -4,7 +4,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
     id("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
-    //id("com.google.devtools.ksp")
+
+
 }
 
 android {
@@ -91,6 +92,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     kapt("androidx.room:room-compiler:2.6.1")
     implementation(libs.androidx.room.ktx)
+
+    implementation(libs.navigation.compose)
 
 }
 

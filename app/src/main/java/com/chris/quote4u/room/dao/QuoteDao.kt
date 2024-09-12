@@ -23,4 +23,7 @@ interface QuoteDao {
     @Query("SELECT * from savedQuotes")
     fun getAllSavedQuote(): Flow<List<SavedQuoteData>>
 
+    @Query("SELECT * from savedQuotes WHERE id = :id")
+    fun getQuoteByID(id: Int): Flow<SavedQuoteData>
+
 }

@@ -3,6 +3,7 @@ package com.chris.quote4u.screen
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,8 +46,11 @@ import com.chris.quote4u.datasource.SavedQuoteData
 import com.chris.quote4u.viewmodel.QuotesViewModel
 
 @Composable
-@Preview
-fun SavedQuoteListScreen() {
+
+fun SavedQuoteListScreen(
+    navigateToHome: () -> Unit,
+    navigateToItemPage: (Int) -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -112,9 +116,6 @@ fun SavedQuoteListScreen() {
                         modifier = Modifier.padding(bottom = 48.dp)
                     ) {
                        items (savedQuoteList) { quote ->
-
-
-
                             ListItemCard(
                                 alignment = if (savedQuoteList.indexOf(quote)%2 == 0 ) {
                                     Alignment.TopStart
@@ -122,7 +123,8 @@ fun SavedQuoteListScreen() {
                                 onDeleteButtonClick = {
                                     selectedQuote = quote
                                     openDeleteDialog = true },
-                                quote = quote.quote
+                                quote = quote.quote,
+                                viewItem = {navigateToItemPage(quote.id)}
                             )
 
                         }
@@ -143,6 +145,7 @@ fun SavedQuoteListScreen() {
 
             if (openDrawer) {
                 BottomDrawerSheet(
+                    onButtonClick = {navigateToHome()},
                     onDismissBottomSheet = {openDrawer = false},
                     buttonText = "Back to Home"
                 )
@@ -166,7 +169,8 @@ fun SavedQuoteListScreen() {
 fun ListItemCard(
     alignment: Alignment,
     onDeleteButtonClick: () -> Unit,
-    quote: String
+    quote: String,
+    viewItem: () -> Unit = {}
 ) {
 
     Box(modifier = Modifier
@@ -176,7 +180,8 @@ fun ListItemCard(
             modifier = Modifier
                 .align(alignment)
                 .fillMaxWidth(0.85f)
-                .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                .clickable { viewItem() },
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary)
         ) {
             Text(

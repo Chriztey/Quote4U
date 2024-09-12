@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.chris.quote4u.navigation.AppNavigationHost
 import com.chris.quote4u.screen.GetStartedScreen
 import com.chris.quote4u.screen.HomeScreen
 import com.chris.quote4u.screen.SavedQuoteListScreen
@@ -29,7 +31,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             Quote4UTheme {
                 //HomeScreen()
-                SavedQuoteListScreen()
+                //SavedQuoteListScreen()
+                //ViewSavedQuoteScreen()
+                AppNavigationHost()
             }
         }
     }

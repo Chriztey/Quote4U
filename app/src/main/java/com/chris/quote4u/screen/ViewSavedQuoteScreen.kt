@@ -1,5 +1,6 @@
 package com.chris.quote4u.screen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,15 +40,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.quote4u.R
 import com.chris.quote4u.component.BottomDrawerOpener
 import com.chris.quote4u.component.BottomDrawerSheet
 import com.chris.quote4u.component.DeleteDialogBox
+import com.chris.quote4u.viewmodel.QuotesViewModel
 
 @Composable
-fun ViewSavedQuoteScreen() {
+fun ViewSavedQuoteScreen(
+    quoteId: Int
+) {
 
     val context = LocalContext.current
+
+    val viewModel = hiltViewModel<QuotesViewModel>()
+    val selectedQuote by viewModel.selectedQuote.collectAsState()
+
+    LaunchedEffect(selectedQuote) {
+        viewModel.getQuoteByID(quoteId)
+    }
+
+
+
+
 
     var openDrawer by remember {
         mutableStateOf(false)
@@ -101,16 +119,18 @@ fun ViewSavedQuoteScreen() {
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary)
                         ) {
 
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 32.dp, horizontal = 16.dp),
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold,
-                                text = "Loren ipsum sdjsdjsdssdjshdjsdxscsddddsdsdsdsdsdsdsddddddddsdsdsdsdsdsdsd"
-                            )
+                            selectedQuote?.let {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 32.dp, horizontal = 16.dp),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                    text = it.quote
+                                )
+                            }
                         }
 
                         Box {
