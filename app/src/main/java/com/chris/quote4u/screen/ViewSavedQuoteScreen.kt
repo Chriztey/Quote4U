@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -49,7 +50,9 @@ import com.chris.quote4u.viewmodel.QuotesViewModel
 
 @Composable
 fun ViewSavedQuoteScreen(
-    quoteId: Int
+    quoteId: Int,
+    navigateToHome: () -> Unit,
+    navigateBack: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -130,6 +133,20 @@ fun ViewSavedQuoteScreen(
                                     fontWeight = FontWeight.Bold,
                                     text = it.quote
                                 )
+
+                                Spacer(modifier = Modifier.height(48.dp))
+
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = 16.dp, bottom = 8.dp),
+                                    text = it.author,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.End
+                                )
+
                             }
                         }
 
@@ -176,6 +193,7 @@ fun ViewSavedQuoteScreen(
 
             if (openDrawer) {
                 BottomDrawerSheet(
+                    onButtonClick = {navigateToHome()},
                     onDismissBottomSheet = {openDrawer = false},
                     buttonText = "Back to Home"
                 )
@@ -184,7 +202,12 @@ fun ViewSavedQuoteScreen(
             if(openDeleteDialog) {
                 DeleteDialogBox(
                     dismissDialog = {openDeleteDialog = false},
-                    confirmButton = {Toast.makeText(context,"Item removed",Toast.LENGTH_SHORT).show()}
+                    confirmButton = {
+                        selectedQuote?.let { viewModel.deleteSavedQuote(it) }
+                        Toast.makeText(context,"Item removed",Toast.LENGTH_SHORT).show()
+                        openDeleteDialog = false
+                        navigateBack()
+                    }
                 )
             }
 

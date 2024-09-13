@@ -35,7 +35,9 @@ fun AppNavigationHost () {
         composable<SavedQuoteItemScreenRoute> {
             val args = it.toRoute<SavedQuoteItemScreenRoute>()
             ViewSavedQuoteScreen(
-                quoteId = args.quoteId
+                quoteId = args.quoteId,
+                navigateToHome = {navHost.navigate(HomeScreenRoute)},
+                navigateBack = {navHost.popBackStack()}
             )
         }
 
