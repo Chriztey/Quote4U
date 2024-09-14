@@ -95,6 +95,12 @@ dependencies {
 
     implementation(libs.navigation.compose)
 
+    // For Glance support
+    implementation("androidx.glance:glance:1.1.0")
+
+    // For AppWidgets support
+    implementation("androidx.glance:glance-appwidget:1.1.0")
+
 }
 
 kapt {
