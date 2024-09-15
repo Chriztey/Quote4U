@@ -68,11 +68,26 @@ class QuoteWidget: GlanceAppWidget() {
                 }
             ) {
                 val quotes = repo.loadSavedQuotes().collectAsState(initial = emptyList())
-                Column {
-                    quotes.value.forEach {
-                        Text(text = it.quote)
+                val randomIndex = (0..quotes.value.size).random()
+                Log.d("randomIndex", randomIndex.toString())
+
+
+                quotes.value.forEach {
+
+                    if (quotes.value.indexOf(it) == randomIndex) {
+
+                        WidgetContent(quoteDisplay = it.quote)
+
+                        //Text(text = it.quote)
                     }
+
+
                 }
+
+
+                //Text(text = quotes.value[0].quote)
+
+                //WidgetContent(quoteDisplay = )
 
             }
         }
@@ -80,9 +95,10 @@ class QuoteWidget: GlanceAppWidget() {
 }
 
 @Composable
-fun WidgetContent() {
+fun WidgetContent(
+    quoteDisplay: String
+) {
 
-    //val repository = remember { QuotesViewModel }
 
     Column(
         modifier = GlanceModifier.fillMaxSize(),
@@ -91,7 +107,7 @@ fun WidgetContent() {
     ) {
         Text(
             modifier = GlanceModifier.fillMaxWidth(),
-            text = "dfdfdf",
+            text = quoteDisplay,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
