@@ -5,5 +5,5 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 
 class QuoteAppWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
-        get() = QuoteWidget()
+        get() = QuoteWidget
 }

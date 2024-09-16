@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.dp
 import androidx.glance.Button
 
 import androidx.glance.GlanceId
@@ -37,7 +38,12 @@ import com.chris.quote4u.viewmodel.toSavedQuoteData
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.glance.action.ActionParameters
+import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
+import androidx.glance.layout.padding
 import androidx.glance.state.GlanceStateDefinition
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.lifecycle.Lifecycle
@@ -50,45 +56,54 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class QuoteWidget: GlanceAppWidget() {
 
 
-    
+object QuoteWidget: GlanceAppWidget() {
+
+
+    val indexKey = intPreferencesKey("index")
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
         val repo = QuoteWidgetRepoImple.get(context)
 
 
+
+
         provideContent {
             Scaffold(
                 backgroundColor = GlanceTheme.colors.widgetBackground,
                 titleBar = {
-                    Text(text = "Quote4U")
+                    Text(
+                        modifier = GlanceModifier.fillMaxWidth().padding(4.dp),
+                        text = "Quote4U",
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            color = GlanceTheme.colors.onSurface
+                        )
+                    )
                 }
             ) {
                 val quotes = repo.loadSavedQuotes().collectAsState(initial = emptyList())
-                val randomIndex = (0..quotes.value.size).random()
-                Log.d("randomIndex", randomIndex.toString())
+                val randomIndex = (0.. quotes.value.size ).random()
+                val index = currentState(key = indexKey) ?: randomIndex
 
+                Log.d("randomIndex", index.toString())
 
-                quotes.value.forEach {
-
-                    if (quotes.value.indexOf(it) == randomIndex) {
-
-                        WidgetContent(quoteDisplay = it.quote)
-
-                        //Text(text = it.quote)
+                //if (quotes.value !== emptyList<SavedQuoteData>()) {
+                    quotes.value.forEach {
+                        if (quotes.value.indexOf(it) == index) {
+                            WidgetContent(
+                                quoteDisplay = it.quote,
+                                listSize = quotes.value,
+                                showingIndex = index
+                                )
+                        }
                     }
-
-
-                }
-
-
-                //Text(text = quotes.value[0].quote)
-
-                //WidgetContent(quoteDisplay = )
-
+//                } else {
+//                    WidgetContent(quoteDisplay = "You haven't favorited any quote yet ..", emptyList(), index)
+//                }
             }
         }
     }
@@ -96,7 +111,9 @@ class QuoteWidget: GlanceAppWidget() {
 
 @Composable
 fun WidgetContent(
-    quoteDisplay: String
+    quoteDisplay: String,
+    listSize: List<SavedQuoteData>,
+    showingIndex: Int
 ) {
 
 
@@ -115,7 +132,55 @@ fun WidgetContent(
             )
         )
 
-        //Button(text = "Shuffle", onClick = { actionStartActivity<MainActivity>() })
+        Button(text = "Shuffle",
+            onClick = if (6 > showingIndex) {
+                actionRunCallback(shuffleQuoteActionCallBack::class.java)
+            } else {
+                actionRunCallback(resetIndexCallBack::class.java)
+            } )
+
+
     }
 
+}
+
+
+object shuffleQuoteActionCallBack : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters
+    ) {
+        //val shuffleNumber = (0..listSize.size).random()
+
+
+        updateAppWidgetState(context, glanceId) { prefs ->
+            val currentIndex = prefs[QuoteWidget.indexKey]
+            if (currentIndex != null) {
+                prefs[QuoteWidget.indexKey] = currentIndex + 1
+            } else {
+                prefs[QuoteWidget.indexKey] = 0
+            }
+        }
+
+        QuoteWidget.update(context, glanceId)
+
+    }
+}
+
+object resetIndexCallBack : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters
+    ) {
+
+        updateAppWidgetState(context, glanceId) { prefs ->
+           prefs[QuoteWidget.indexKey] = 0
+
+        }
+
+        QuoteWidget.update(context, glanceId)
+
+    }
 }

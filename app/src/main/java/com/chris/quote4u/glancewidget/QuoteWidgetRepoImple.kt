@@ -42,11 +42,11 @@ class QuoteWidgetRepoImple @Inject constructor(
     }
 
     suspend fun quoteAdded() {
-        QuoteWidget().updateAll(context = appContext)
+        QuoteWidget.updateAll(context = appContext)
     }
 
     suspend fun quoteDeleted() {
-        QuoteWidget().updateAll(context = appContext)
+        QuoteWidget.updateAll(context = appContext)
     }
 }
 
