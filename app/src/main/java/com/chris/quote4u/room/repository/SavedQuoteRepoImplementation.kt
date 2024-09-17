@@ -1,7 +1,9 @@
 package com.chris.quote4u.room.repository
 
+import androidx.glance.appwidget.action.actionRunCallback
 import com.chris.quote4u.datasource.SavedQuoteData
 import com.chris.quote4u.glancewidget.QuoteWidgetRepoImple
+import com.chris.quote4u.glancewidget.resetIndexCallBack
 import com.chris.quote4u.room.dao.QuoteDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -26,10 +28,12 @@ class SavedQuoteRepoImplementation @Inject constructor(
     override suspend fun insertQuote(savedQuoteData: SavedQuoteData) {
         quoteDao.insert(savedQuoteData)
         quoteWidgetRepoImple.quoteAdded()
+        actionRunCallback(resetIndexCallBack::class.java)
     }
 
     override suspend fun deleteQuote(savedQuoteData: SavedQuoteData) {
         quoteDao.delete(savedQuoteData)
         quoteWidgetRepoImple.quoteDeleted()
+        actionRunCallback(resetIndexCallBack::class.java)
     }
 }
