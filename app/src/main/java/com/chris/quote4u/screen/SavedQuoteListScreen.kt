@@ -107,32 +107,47 @@ fun SavedQuoteListScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
-
-                if (savedQuoteList.isNullOrEmpty()) {
-                    Text(text = "empty")
-                } else {
-
+                
                     LazyColumn(
                         modifier = Modifier.padding(bottom = 48.dp)
                     ) {
-                       items (savedQuoteList) { quote ->
-                            ListItemCard(
-                                alignment = if (savedQuoteList.indexOf(quote)%2 == 0 ) {
-                                    Alignment.TopStart
-                                } else {Alignment.TopEnd},
-                                onDeleteButtonClick = {
-                                    selectedQuote = quote
-                                    openDeleteDialog = true },
-                                quote = quote.quote,
-                                viewItem = {navigateToItemPage(quote.id)}
-                            )
-
+                        if (savedQuoteList.isNotEmpty()) {
+                            items (savedQuoteList) { quote ->
+                                ListItemCard(
+                                    alignment = if (savedQuoteList.indexOf(quote)%2 == 0 ) {
+                                        Alignment.TopStart
+                                    } else {Alignment.TopEnd},
+                                    onDeleteButtonClick = {
+                                        selectedQuote = quote
+                                        openDeleteDialog = true },
+                                    quote = quote.quote,
+                                    viewItem = {navigateToItemPage(quote.id)}
+                                )
+                            }
+                        } else {
+                            
+                            item { 
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().padding(64.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                 Text(
+                                     style = MaterialTheme.typography.titleLarge,
+                                     textAlign = TextAlign.Center,
+                                     fontWeight = FontWeight.Bold,
+                                     color = MaterialTheme.colorScheme.onPrimary,
+                                     text = "You haven't add any quote yet...")
+                                }
+                            }
+                            
                         }
+                        
+                       
                     }
 
 
 
-                }
+                
 
 
 

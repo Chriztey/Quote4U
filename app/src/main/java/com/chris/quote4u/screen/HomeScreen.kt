@@ -159,9 +159,9 @@ fun HomeScreen(
                             modifier = Modifier
                                 .padding(vertical = 43.dp, horizontal = 16.dp)
                                 .sizeIn(
-                                    minWidth = 320.dp,
+                                    minWidth = 330.dp,
                                     minHeight = 186.dp,
-                                    maxWidth = 320.dp,
+                                    maxWidth = 330.dp,
                                     maxHeight = 186.dp
                                 ),
                             shape = RectangleShape,

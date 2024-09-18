@@ -32,6 +32,12 @@ val displayFontFamily = FontFamily(
     )
 )
 
+val widgetFont = FontFamily (
+    androidx.compose.ui.text.font.Font(
+        resId = R.font.merriweatherblack
+    )
+)
+
 // Default Material 3 typography values
 val baseline = Typography()
 

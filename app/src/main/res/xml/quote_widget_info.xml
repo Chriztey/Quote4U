@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:resizeMode="horizontal|vertical"
-    android:minHeight="128dp"
-    android:minWidth="128dp"
+    android:minHeight="102dp"
+    android:minWidth="203dp"
     android:description="@string/app_name"
     android:updatePeriodMillis="3600000"
     android:minResizeHeight="128dp"
     android:minResizeWidth="128dp"
     android:maxResizeHeight="512dp"
     android:maxResizeWidth="512dp"
-    android:targetCellWidth="2"
-    android:targetCellHeight="2"
+    android:targetCellWidth="3"
+    android:targetCellHeight="1"
     android:initialLayout="@layout/glance_default_loading_layout"
     >
 

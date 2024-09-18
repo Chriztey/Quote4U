@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.Button
 
 import androidx.glance.GlanceId
@@ -53,6 +56,7 @@ import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.FilledButton
 import androidx.glance.appwidget.state.updateAppWidgetState
+import androidx.glance.color.ColorProviders
 import androidx.glance.currentState
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.height
@@ -61,6 +65,7 @@ import androidx.glance.layout.size
 import androidx.glance.state.GlanceStateDefinition
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontFamily
+import androidx.glance.unit.ColorProvider
 import androidx.lifecycle.Lifecycle
 import com.chris.quote4u.datasource.SavedQuoteData
 import dagger.hilt.EntryPoint
@@ -87,18 +92,18 @@ object QuoteWidget: GlanceAppWidget() {
 
         provideContent {
             Scaffold(
-                backgroundColor = GlanceTheme.colors.widgetBackground,
-                titleBar = {
-                    Text(
-                        modifier = GlanceModifier.fillMaxWidth().padding(4.dp),
-                        text = "Quote4U",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = GlanceTheme.colors.onSurface
-                        )
-                    )
-                }
+                backgroundColor = ColorProvider(MaterialTheme.colorScheme.background),
+//                titleBar = {
+//                    Text(
+//                        modifier = GlanceModifier.fillMaxWidth().padding(4.dp),
+//                        text = "Quote4U",
+//                        style = TextStyle(
+//                            fontWeight = FontWeight.Bold,
+//                            textAlign = TextAlign.Start,
+//                            color = GlanceTheme.colors.onSurface
+//                        )
+//                    )
+//                }
             ) {
                 val quotes = repo.loadSavedQuotes().collectAsState(initial = emptyList())
                 val randomIndex = (0.. quotes.value.size ).random()
@@ -136,17 +141,32 @@ object QuoteWidget: GlanceAppWidget() {
                         WidgetContent(quoteDisplay = "You haven't favorited any quote yet ..", emptyList(), index)
                     }
 
-                    CircleIconButton(
-
-                        imageProvider = ImageProvider(R.drawable.dice),
-                        contentDescription = "",
-                        onClick =
-                        if (max > index) {
-                            actionRunCallback(shuffleQuoteActionCallBack::class.java)
-                        } else {
-                            actionRunCallback(resetIndexCallBack::class.java)
-                        }
+                    Spacer(
+                        modifier = GlanceModifier.height(8.dp)
                     )
+
+
+                    Column(
+                        modifier = GlanceModifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        CircleIconButton(
+
+                            backgroundColor = ColorProvider(Color.Transparent),
+                            contentColor = ColorProvider(Color.Transparent),
+
+
+                            imageProvider = ImageProvider(R.drawable.dice),
+                            contentDescription = "",
+                            onClick =
+                            if (max > index) {
+                                actionRunCallback(shuffleQuoteActionCallBack::class.java)
+                            } else {
+                                actionRunCallback(resetIndexCallBack::class.java)
+                            }
+                        )
+                    }
+
                 }
 
 
@@ -168,79 +188,29 @@ fun WidgetContent(
     val maxIndex = listSize.size - 1
 
 
-//    Column(
-//        modifier = GlanceModifier.fillMaxWidth(),
-//        horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
+    Column(
+        modifier = GlanceModifier.fillMaxWidth().height(120.dp).padding(top = 12.dp),
+        horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
         Text(
             modifier = GlanceModifier.fillMaxWidth(),
-            text = quoteDisplay,
+            text = quoteDisplay.uppercase(),
             style = TextStyle(
+                fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
+                //fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = GlanceTheme.colors.onSurface
+                color = ColorProvider(Color.Black)
             )
         )
 
         Spacer(modifier = GlanceModifier.height(8.dp))
 
-//       Button(
-//            modifier = Modifier.fillMaxWidth().padding(16.dp),
-//            onClick = { if (maxIndex > showingIndex) {
-//                    actionRunCallback(shuffleQuoteActionCallBack::class.java)
-//                } else {
-//                    actionRunCallback(resetIndexCallBack::class.java)
-//                } }
-//        ) {
-//            Image(
-//                provider = ImageProvider(R.drawable.dice),
-//                modifier = GlanceModifier.size(8.dp),
-//                contentDescription = ""
-//                )
-//        }
-
-//        FilledButton(
-//            text = "Shuffle",
-//            onClick = {
-//
-//                if (maxIndex > showingIndex) {
-//                    actionRunCallback(shuffleQuoteActionCallBack::class.java)
-//                } else {
-//                    actionRunCallback(resetIndexCallBack::class.java)
-//                }
-//
-//            },
-//            icon = ImageProvider(R.drawable.dice) )
 
 
-//        CircleIconButton(
-//            imageProvider = ImageProvider(R.drawable.dice),
-//            contentDescription = "",
-//            onClick =
-//                if (maxIndex > showingIndex) {
-//                    actionRunCallback(shuffleQuoteActionCallBack::class.java)
-//                } else {
-//                    actionRunCallback(resetIndexCallBack::class.java)
-//                }
-//            )
-
-
-//        Button(
-//            modifier = GlanceModifier.padding(8.dp),
-//            text = "Shuffle",
-//            onClick =
-//
-//            if (maxIndex > showingIndex) {
-//                actionRunCallback(shuffleQuoteActionCallBack::class.java)
-//            } else {
-//                actionRunCallback(resetIndexCallBack::class.java)
-//            }
-//        )
-
-
-    //}
+    }
 
 }
 
@@ -285,3 +255,5 @@ object resetIndexCallBack : ActionCallback {
 
     }
 }
+
+
