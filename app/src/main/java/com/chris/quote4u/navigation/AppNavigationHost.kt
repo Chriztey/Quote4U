@@ -4,7 +4,12 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
@@ -37,11 +42,9 @@ fun AppNavigationHost () {
         }
 
         composable<SavedQuoteListScreenRoute>(
-            enterTransition = ::slideInToUp,
-            exitTransition = ::slideOutToLeft,
+            enterTransition = ::slideInToRight,
             popExitTransition = ::slideOutToLeft,
             popEnterTransition = ::slideInToUp
-
         ) {
             SavedQuoteListScreen(
                 navigateToHome = {navHost.navigate(HomeScreenRoute)},
@@ -50,8 +53,26 @@ fun AppNavigationHost () {
         }
 
         composable<SavedQuoteItemScreenRoute>(
-            enterTransition = ::slideInToRight,
-            exitTransition = ::slideOutToLeft,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            },
             popExitTransition = ::slideOutToLeft,
             popEnterTransition = ::slideInToLeft
         ) {
@@ -62,11 +83,12 @@ fun AppNavigationHost () {
                 navigateBack = {navHost.popBackStack()}
             )
         }
-
     }
 
 }
 
+@Serializable
+object GetStartedScreenRoute
 @Serializable
 object HomeScreenRoute
 @Serializable

@@ -65,9 +65,6 @@ fun ViewSavedQuoteScreen(
     }
 
 
-
-
-
     var openDrawer by remember {
         mutableStateOf(false)
     }
@@ -159,11 +156,6 @@ fun ViewSavedQuoteScreen(
                                 alignment = Alignment.TopEnd,
                                 contentDescription = ""
                             )
-
-
-
-
-
                         }
                     }
 
@@ -177,13 +169,7 @@ fun ViewSavedQuoteScreen(
                         painter = painterResource(id = R.drawable.cross_delete),
                         contentDescription = "shuffle"
                     )
-
-
                 }
-
-
-
-
             }
 
             BottomDrawerOpener(modifier = Modifier.align(Alignment.BottomCenter)) {

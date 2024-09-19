@@ -1,6 +1,8 @@
 package com.chris.quote4u.screen
 
 import android.widget.Toast
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,6 +47,7 @@ import com.chris.quote4u.component.DeleteDialogBox
 import com.chris.quote4u.datasource.SavedQuoteData
 import com.chris.quote4u.viewmodel.QuotesViewModel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 
 fun SavedQuoteListScreen(
@@ -80,12 +83,9 @@ fun SavedQuoteListScreen(
                 )) {
             Column(
                 modifier = Modifier
-
                     .fillMaxSize()
                     .align(Alignment.TopCenter)
-                    //.verticalScroll(rememberScrollState())
                     .background(MaterialTheme.colorScheme.background),
-                //color = MaterialTheme.colorScheme.background
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
@@ -114,6 +114,10 @@ fun SavedQuoteListScreen(
                         if (savedQuoteList.isNotEmpty()) {
                             items (savedQuoteList) { quote ->
                                 ListItemCard(
+                                    modifier = Modifier.animateItem(
+                                        fadeInSpec = tween(300),
+                                        fadeOutSpec = tween(300)
+                                    ),
                                     alignment = if (savedQuoteList.indexOf(quote)%2 == 0 ) {
                                         Alignment.TopStart
                                     } else {Alignment.TopEnd},
@@ -139,18 +143,8 @@ fun SavedQuoteListScreen(
                                      text = "You haven't add any quote yet...")
                                 }
                             }
-                            
                         }
-                        
-                       
                     }
-
-
-
-                
-
-
-
             }
 
             BottomDrawerOpener(
@@ -182,13 +176,14 @@ fun SavedQuoteListScreen(
 
 @Composable
 fun ListItemCard(
+    modifier: Modifier = Modifier,
     alignment: Alignment,
     onDeleteButtonClick: () -> Unit,
     quote: String,
     viewItem: () -> Unit = {}
 ) {
 
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = 16.dp)) {
         Card(
@@ -211,8 +206,6 @@ fun ListItemCard(
                 overflow = TextOverflow.Ellipsis,
                 text = quote)
         }
-
-
 
         IconButton(
             modifier = Modifier.align(alignment),

@@ -1,6 +1,7 @@
 package com.chris.quote4u.screen
 
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.quote4u.R
@@ -51,21 +53,16 @@ import com.chris.quote4u.viewmodel.toSavedQuoteData
 import kotlinx.coroutines.launch
 
 @Composable
-//@Preview
+@Preview
 fun HomeScreen(
-    navigateToSavedQuotes: () -> Unit
+    navigateToSavedQuotes: () -> Unit = {}
 ) {
 
     val scope = rememberCoroutineScope()
-
     val viewModel = hiltViewModel<QuotesViewModel>()
     val randomQuote by viewModel.randomQuote.collectAsState()
     val fetchingState by viewModel.quoteFetchState.collectAsState()
-
     val context = LocalContext.current
-
-
-
 
 
     var openDrawer by remember {
@@ -75,14 +72,11 @@ fun HomeScreen(
 
     val currentShowingQuote = randomQuote.randomQuote?.toSavedQuoteData()
 
-
-
-
-
     val saveButtonOnClick = randomQuote.isQuoteFav
 
-
-
+    val animatedSaveButtonColor by animateColorAsState(
+        targetValue = if (saveButtonOnClick) {Color.Yellow} else MaterialTheme.colorScheme.secondary,
+        label = "")
 
 
     fun favoriteQuote() {
@@ -124,7 +118,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
-                    .padding(vertical = 32.dp, horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 32.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -157,11 +151,10 @@ fun HomeScreen(
 
                         Card(
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(vertical = 43.dp, horizontal = 16.dp)
                                 .sizeIn(
-                                    minWidth = 330.dp,
                                     minHeight = 186.dp,
-                                    maxWidth = 330.dp,
                                     maxHeight = 186.dp
                                 ),
                             shape = RectangleShape,
@@ -215,9 +208,6 @@ fun HomeScreen(
                                 contentDescription = ""
                             )
 
-
-
-
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -228,24 +218,19 @@ fun HomeScreen(
                                 IconButton(onClick = {
                                     viewModel.savedUnsavedQuote()
                                     if (saveButtonOnClick == false) {
-
                                         favoriteQuote()
                                         Toast.makeText(context, "Quote Saved", Toast.LENGTH_SHORT)
                                             .show()
                                     } else {
-
                                         unfavoriteQuote()
                                         Toast.makeText(context, "Unfavorite Quote", Toast.LENGTH_SHORT)
                                             .show()
                                     }
-
                                 }) {
                                     Icon(
                                         modifier = Modifier
                                             .size(48.dp),
-                                        tint = if (saveButtonOnClick) {
-                                            Color.Yellow
-                                        } else MaterialTheme.colorScheme.secondary,
+                                        tint = animatedSaveButtonColor,
                                         painter = painterResource(id = R.drawable.baseline_bookmark_24),
                                         contentDescription = "save"
                                     )
@@ -265,13 +250,7 @@ fun HomeScreen(
                         painter = painterResource(id = R.drawable.dice),
                         contentDescription = "shuffle"
                     )
-
-
                 }
-
-
-
-
             }
 
             BottomDrawerOpener(modifier = Modifier.align(Alignment.BottomCenter)) {
