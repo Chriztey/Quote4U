@@ -2,6 +2,7 @@ package com.chris.quote4u.navigation
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
@@ -24,25 +25,22 @@ fun AppNavigationHost () {
         navController = navHost,
         startDestination = HomeScreenRoute) {
 
-        composable<HomeScreenRoute> {
+        composable<HomeScreenRoute>(
+            enterTransition = ::slideInToRight,
+            exitTransition = ::slideOutToUp,
+            popExitTransition = ::slideOutToUp,
+            popEnterTransition = ::slideInToLeft
+        ) {
             HomeScreen(
                 navigateToSavedQuotes = {navHost.navigate(SavedQuoteListScreenRoute)}
             )
         }
 
         composable<SavedQuoteListScreenRoute>(
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Up,
-                    animationSpec = tween(300)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
-                )
-            }
+            enterTransition = ::slideInToUp,
+            exitTransition = ::slideOutToLeft,
+            popExitTransition = ::slideOutToLeft,
+            popEnterTransition = ::slideInToUp
 
         ) {
             SavedQuoteListScreen(
@@ -51,7 +49,12 @@ fun AppNavigationHost () {
             )
         }
 
-        composable<SavedQuoteItemScreenRoute> {
+        composable<SavedQuoteItemScreenRoute>(
+            enterTransition = ::slideInToRight,
+            exitTransition = ::slideOutToLeft,
+            popExitTransition = ::slideOutToLeft,
+            popEnterTransition = ::slideInToLeft
+        ) {
             val args = it.toRoute<SavedQuoteItemScreenRoute>()
             ViewSavedQuoteScreen(
                 quoteId = args.quoteId,
@@ -87,6 +90,52 @@ fun slideOutToRight(
 ): ExitTransition {
     return scope.slideOutOfContainer(
         AnimatedContentTransitionScope.SlideDirection.Right,
+        animationSpec = tween(300)
+    )
+}
+
+fun slideOutToUp(
+    scope: AnimatedContentTransitionScope<NavBackStackEntry>
+): ExitTransition {
+    return scope.slideOutOfContainer(
+        AnimatedContentTransitionScope.SlideDirection.Up,
+        animationSpec = tween(300)
+    )
+}
+
+fun slideOutToDown(
+    scope: AnimatedContentTransitionScope<NavBackStackEntry>
+): ExitTransition {
+    return scope.slideOutOfContainer(
+        AnimatedContentTransitionScope.SlideDirection.Down,
+        animationSpec = tween(300)
+    )
+}
+
+fun slideInToLeft(
+    scope: AnimatedContentTransitionScope<NavBackStackEntry>
+): EnterTransition {
+    return scope.slideIntoContainer(
+        AnimatedContentTransitionScope.SlideDirection.Down,
+        animationSpec = tween(300)
+    )
+}
+
+fun slideInToRight(
+    scope: AnimatedContentTransitionScope<NavBackStackEntry>
+): EnterTransition {
+    return scope.slideIntoContainer(
+        AnimatedContentTransitionScope.SlideDirection.Right,
+        animationSpec = tween(300)
+    )
+}
+
+
+fun slideInToUp(
+    scope: AnimatedContentTransitionScope<NavBackStackEntry>
+): EnterTransition {
+    return scope.slideIntoContainer(
+        AnimatedContentTransitionScope.SlideDirection.Up,
         animationSpec = tween(300)
     )
 }
