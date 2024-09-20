@@ -26,16 +26,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.chris.quote4u.R
 import com.chris.quote4u.component.OutlinedTransparentButton
+import com.chris.quote4u.viewmodel.OnBoardViewModel
+import com.chris.quote4u.viewmodel.QuotesViewModel
 
 @Composable
 fun GetStartedScreen (
-    modifier: Modifier
+    navigateToHome: () -> Unit
 ) {
 
+    val viewModel = hiltViewModel<OnBoardViewModel>()
+
     Surface (
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         color = MaterialTheme.colorScheme.background
@@ -67,7 +72,11 @@ fun GetStartedScreen (
 
                 Spacer(modifier = Modifier.height(156.dp))
 
-                OutlinedTransparentButton(text = "Get Started")
+                OutlinedTransparentButton(
+                    onClick = {
+                        viewModel.updateOnboardingStatus(true)
+                        navigateToHome()},
+                    text = "Get Started")
 
             }
 

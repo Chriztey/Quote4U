@@ -4,8 +4,6 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
     id("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
-
-
 }
 
 android {
@@ -100,6 +98,9 @@ dependencies {
 
     // For AppWidgets support
     implementation("androidx.glance:glance-appwidget:1.1.0")
+
+    // Datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 }
 

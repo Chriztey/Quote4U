@@ -11,24 +11,39 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.chris.quote4u.screen.GetStartedScreen
 import com.chris.quote4u.screen.HomeScreen
 import com.chris.quote4u.screen.SavedQuoteListScreen
 import com.chris.quote4u.screen.ViewSavedQuoteScreen
+import com.chris.quote4u.viewmodel.OnBoardViewModel
+import com.chris.quote4u.viewmodel.QuotesViewModel
 import kotlinx.serialization.Serializable
 
 @Composable
 fun AppNavigationHost () {
 
     val navHost = rememberNavController()
+    val viewModel = hiltViewModel<OnBoardViewModel>()
+    val status by viewModel.onboardingStatus.collectAsState()
+
 
     NavHost(
         navController = navHost,
-        startDestination = HomeScreenRoute) {
+        startDestination = if(status) { HomeScreenRoute } else GetStartedScreenRoute) {
+
+        composable<GetStartedScreenRoute>{
+            GetStartedScreen(
+                navigateToHome = {navHost.navigate(HomeScreenRoute)},
+            )
+        }
 
         composable<HomeScreenRoute>(
             enterTransition = ::slideInToRight,

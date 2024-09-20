@@ -2,6 +2,8 @@ package com.chris.quote4u.module
 
 import android.content.Context
 import androidx.room.Room
+import com.chris.quote4u.repository.OnBoardingRepo
+import com.chris.quote4u.repository.OnBoardingRepoImplementation
 import com.chris.quote4u.repository.QuoteRepo
 import com.chris.quote4u.repository.QuoteRepoImplementation
 import com.chris.quote4u.room.QuoteDatabase
@@ -27,12 +29,16 @@ abstract class RepoModule {
     ): QuoteRepo
 
 
-
-
     @Binds
     @Singleton
     abstract fun bindSavedQuoteRepo(
         savedQuoteRepoImplementation: SavedQuoteRepoImplementation
     ): SavedQuoteRepo
+
+    @Binds
+    @Singleton
+    abstract fun bindOnboardingRepo(
+        onBoardingRepo: OnBoardingRepoImplementation
+    ): OnBoardingRepo
 
 }

@@ -93,17 +93,6 @@ object QuoteWidget: GlanceAppWidget() {
         provideContent {
             Scaffold(
                 backgroundColor = ColorProvider(MaterialTheme.colorScheme.background),
-//                titleBar = {
-//                    Text(
-//                        modifier = GlanceModifier.fillMaxWidth().padding(4.dp),
-//                        text = "Quote4U",
-//                        style = TextStyle(
-//                            fontWeight = FontWeight.Bold,
-//                            textAlign = TextAlign.Start,
-//                            color = GlanceTheme.colors.onSurface
-//                        )
-//                    )
-//                }
             ) {
                 val quotes = repo.loadSavedQuotes().collectAsState(initial = emptyList())
                 val randomIndex = (0.. quotes.value.size ).random()
@@ -168,11 +157,6 @@ object QuoteWidget: GlanceAppWidget() {
                     }
 
                 }
-
-
-
-
-
             }
         }
     }
