@@ -18,6 +18,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.chris.quote4u.screen.GetStartedScreen
 import com.chris.quote4u.screen.HomeScreen
@@ -62,7 +63,8 @@ fun AppNavigationHost () {
             popEnterTransition = ::slideInToUp
         ) {
             SavedQuoteListScreen(
-                navigateToHome = {navHost.navigate(HomeScreenRoute)},
+                navigateToHome = {
+                    navHost.popBackStack(route = HomeScreenRoute, inclusive = false) },
                 navigateToItemPage = {navHost.navigate(SavedQuoteItemScreenRoute(it))}
             )
         }
@@ -94,7 +96,7 @@ fun AppNavigationHost () {
             val args = it.toRoute<SavedQuoteItemScreenRoute>()
             ViewSavedQuoteScreen(
                 quoteId = args.quoteId,
-                navigateToHome = {navHost.navigate(HomeScreenRoute)},
+                navigateToHome = {navHost.popBackStack(route = HomeScreenRoute, inclusive = false)},
                 navigateBack = {navHost.popBackStack()}
             )
         }
