@@ -19,6 +19,7 @@ import com.chris.quote4u.navigation.AppNavigationHost
 import com.chris.quote4u.screen.GetStartedScreen
 import com.chris.quote4u.screen.HomeScreen
 import com.chris.quote4u.screen.SavedQuoteListScreen
+import com.chris.quote4u.screen.SplashScreen
 import com.chris.quote4u.screen.TestFetchData
 import com.chris.quote4u.screen.ViewSavedQuoteScreen
 import com.example.compose.Quote4UTheme
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
                 //SavedQuoteListScreen()
                 //ViewSavedQuoteScreen()
                 AppNavigationHost()
+                //SplashScreen()
             }
         }
     }

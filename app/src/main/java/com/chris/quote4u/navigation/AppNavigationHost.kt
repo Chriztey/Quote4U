@@ -23,6 +23,7 @@ import androidx.navigation.toRoute
 import com.chris.quote4u.screen.GetStartedScreen
 import com.chris.quote4u.screen.HomeScreen
 import com.chris.quote4u.screen.SavedQuoteListScreen
+import com.chris.quote4u.screen.SplashScreen
 import com.chris.quote4u.screen.ViewSavedQuoteScreen
 import com.chris.quote4u.viewmodel.OnBoardViewModel
 import com.chris.quote4u.viewmodel.QuotesViewModel
@@ -38,7 +39,18 @@ fun AppNavigationHost () {
 
     NavHost(
         navController = navHost,
-        startDestination = if(status) { HomeScreenRoute } else GetStartedScreenRoute) {
+        startDestination =
+        if(status) { HomeScreenRoute } else SplashScreenRoute
+
+    )
+
+    {
+
+        composable<SplashScreenRoute>{
+            SplashScreen(
+                getStart = {navHost.navigate(GetStartedScreenRoute)}
+            )
+        }
 
         composable<GetStartedScreenRoute>{
             GetStartedScreen(
@@ -104,6 +116,8 @@ fun AppNavigationHost () {
 
 }
 
+@Serializable
+object SplashScreenRoute
 @Serializable
 object GetStartedScreenRoute
 @Serializable

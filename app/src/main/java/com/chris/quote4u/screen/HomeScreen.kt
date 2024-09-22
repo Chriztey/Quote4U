@@ -260,7 +260,9 @@ fun HomeScreen(
 
             if (openDrawer) {
                 BottomDrawerSheet(
-                    onButtonClick = {navigateToSavedQuotes()},
+                    onButtonClick = {
+                        openDrawer = false
+                        navigateToSavedQuotes()},
                     onDismissBottomSheet = {openDrawer = false},
                     buttonText = "Saved Quotes"
                 )

@@ -85,3 +85,11 @@ fun GetStartedScreen (
     }
 
 }
+
+@Composable
+fun test() {
+
+    SplashScreen()
+
+
+}
