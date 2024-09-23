@@ -43,7 +43,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/quote_widget_info"/>
 
-
         </receiver>
 
 

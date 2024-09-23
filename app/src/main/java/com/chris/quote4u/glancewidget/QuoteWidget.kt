@@ -80,7 +80,6 @@ import kotlin.random.Random
 
 object QuoteWidget: GlanceAppWidget() {
 
-
     val indexKey = intPreferencesKey("index")
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
@@ -88,11 +87,9 @@ object QuoteWidget: GlanceAppWidget() {
         val repo = QuoteWidgetRepoImple.get(context)
 
 
-
-
         provideContent {
             Scaffold(
-                backgroundColor = ColorProvider(MaterialTheme.colorScheme.background),
+                backgroundColor = ColorProvider(Color(0,30,62)),
             ) {
                 val quotes = repo.loadSavedQuotes().collectAsState(initial = emptyList())
                 val randomIndex = (0.. quotes.value.size ).random()
@@ -114,11 +111,6 @@ object QuoteWidget: GlanceAppWidget() {
                     if (max >= 0 ) {
                         quotes.value.forEach {
                             if (quotes.value.indexOf(it) == index) {
-
-
-
-
-
                                 WidgetContent(
                                     quoteDisplay = it.quote,
                                     listSize = quotes.value,
@@ -173,20 +165,23 @@ fun WidgetContent(
 
 
     Column(
-        modifier = GlanceModifier.fillMaxWidth().height(120.dp).padding(top = 12.dp),
+        modifier = GlanceModifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .padding(top = 12.dp)
+            ,
         horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         Text(
             modifier = GlanceModifier.fillMaxWidth(),
-            text = quoteDisplay.uppercase(),
+            text = quoteDisplay.lowercase(),
             style = TextStyle(
-                fontSize = 14.sp,
-                fontFamily = FontFamily.Monospace,
-                //fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                fontFamily = FontFamily.Cursive,
                 textAlign = TextAlign.Center,
-                color = ColorProvider(Color.Black)
+                color = ColorProvider(Color.White)
             )
         )
 
