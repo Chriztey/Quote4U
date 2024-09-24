@@ -16,7 +16,6 @@ class SavedQuoteRepoImplementation @Inject constructor(
         return quoteDao.getQuote(quote, author)
     }
 
-
     override fun getAllSavedQuote(): Flow<List<SavedQuoteData>> {
        return quoteDao.getAllSavedQuote()
     }

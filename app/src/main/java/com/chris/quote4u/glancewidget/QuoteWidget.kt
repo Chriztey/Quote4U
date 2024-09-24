@@ -86,7 +86,6 @@ object QuoteWidget: GlanceAppWidget() {
 
         val repo = QuoteWidgetRepoImple.get(context)
 
-
         provideContent {
             Scaffold(
                 backgroundColor = ColorProvider(Color(0,30,62)),
@@ -113,13 +112,11 @@ object QuoteWidget: GlanceAppWidget() {
                             if (quotes.value.indexOf(it) == index) {
                                 WidgetContent(
                                     quoteDisplay = it.quote,
-                                    listSize = quotes.value,
-                                    showingIndex = index
                                 )
                             }
                         }
                     } else {
-                        WidgetContent(quoteDisplay = "You haven't favorited any quote yet ..", emptyList(), index)
+                        WidgetContent(quoteDisplay = "You haven't favorited any quote yet ..")
                     }
 
                     Spacer(
@@ -157,13 +154,7 @@ object QuoteWidget: GlanceAppWidget() {
 @Composable
 fun WidgetContent(
     quoteDisplay: String,
-    listSize: List<SavedQuoteData>,
-    showingIndex: Int
 ) {
-
-    val maxIndex = listSize.size - 1
-
-
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
@@ -184,11 +175,7 @@ fun WidgetContent(
                 color = ColorProvider(Color.White)
             )
         )
-
         Spacer(modifier = GlanceModifier.height(8.dp))
-
-
-
     }
 
 }
@@ -200,9 +187,6 @@ object shuffleQuoteActionCallBack : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters
     ) {
-
-
-
         updateAppWidgetState(context, glanceId) { prefs ->
             val currentIndex = prefs[QuoteWidget.indexKey]
             if (currentIndex != null) {
@@ -223,15 +207,10 @@ object resetIndexCallBack : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters
     ) {
-
-
         updateAppWidgetState(context, glanceId) { prefs ->
            prefs[QuoteWidget.indexKey] = 0
-
         }
-
         QuoteWidget.update(context, glanceId)
-
     }
 }
 

@@ -3,10 +3,14 @@ package com.chris.quote4u.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chris.quote4u.datasource.QuoteFetchState
 import com.chris.quote4u.repository.OnBoardingRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -16,6 +20,9 @@ import javax.inject.Inject
 class OnBoardViewModel @Inject constructor(
     private val onBoardingRepository: OnBoardingRepo
 ) : ViewModel() {
+
+    private val _isReady = MutableStateFlow<QuoteFetchState>(QuoteFetchState.Loading)
+    val isReady = _isReady.asStateFlow()
 
     var _onboardingStatus : StateFlow<Boolean> =
         onBoardingRepository.readOnBoardingState().map {
@@ -44,6 +51,7 @@ class OnBoardViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             updateStatus()
+            _isReady.value = QuoteFetchState.Success
         }
     }
 

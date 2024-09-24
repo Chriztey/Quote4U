@@ -18,33 +18,14 @@ class QuoteRepoImplementation @Inject constructor(
         callback(QuoteFetchState.Loading)
 
         try {
-//            val q = quoteApi.getRandomQuote()
             result(quoteApi.getRandomQuote())
             callback(QuoteFetchState.Success)
-//            Log.d("Fetch", q[0].quote)
-//            Log.d("Fetch", q[0].author)
         } catch (
             e: Exception
         ) {
             Log.d("Fetch", e.message.toString())
             callback(QuoteFetchState.Error(e.message.toString()))
         }
-
-
-
-
-//        var  data = QuoteData("asas","asas", "")
-//        callback(QuoteFetchState.Loading)
-//
-//        try {
-//            data = quoteApi.getRandomQuote()
-//            callback(QuoteFetchState.Success)
-//
-//        } catch (e: Exception) {
-//            callback(QuoteFetchState.Error(e.message ?: "Unknown error"))
-//        }
-//
-//        return data
 
     }
 }
