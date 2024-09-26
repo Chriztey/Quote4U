@@ -243,6 +243,8 @@ fun HomeScreen(
                         modifier = Modifier
                             .clickable {
 
+                                viewModel.resetFavoriteButton()
+
                                 viewModel.getRandomQuote()
                             }
                             .fillMaxWidth()

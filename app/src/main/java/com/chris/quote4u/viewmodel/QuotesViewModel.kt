@@ -42,7 +42,6 @@ class QuotesViewModel @Inject constructor(
     init {
         getRandomQuote()
         checkQuote()
-        getQuoteByID(33)
     }
 
 
@@ -57,9 +56,7 @@ class QuotesViewModel @Inject constructor(
         )
 
     fun getQuoteByID(id: Int) {
-
         viewModelScope.launch {
-
             saveQuoteRepo.getQuoteByID(
                 id
             ).collect { it ->
@@ -121,7 +118,6 @@ class QuotesViewModel @Inject constructor(
 
     private fun checkQuote(){
          viewModelScope.launch {
-
              val checking = randomQuote.value.randomQuote?.let {
                  saveQuoteRepo.getSavedQuote(
                      quote = it.quote,
@@ -133,6 +129,14 @@ class QuotesViewModel @Inject constructor(
                  isQuoteFav = checking
                      )
              }
+        }
+    }
+
+    fun resetFavoriteButton() {
+        _randomQuote.update {
+            current -> current.copy(
+                isQuoteFav = false
+            )
         }
     }
 

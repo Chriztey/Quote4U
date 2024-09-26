@@ -41,7 +41,6 @@ fun AppNavigationHost () {
         navController = navHost,
         startDestination =
         if(status) { HomeScreenRoute } else SplashScreenRoute
-
     )
 
     {
