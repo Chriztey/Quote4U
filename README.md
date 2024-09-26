@@ -16,6 +16,8 @@ it provides a homescreen widget to showcase saved quotes using Glance API.**
 
 https://youtu.be/AnJpaddoDSM?si=q7R7zDgy8tqq9ml7
 
+[Download APK Here](https://drive.google.com/file/d/1emuG4h6h-WUgYFoK3SDbB_NMYYVt3ZWB/view?usp=sharing)
+
 <h1>Technology Stack</h1>
 
 ![quote4u](https://github.com/Chriztey/Quote4U/blob/main/Quote4U_Presentation_Deck/11.png)
