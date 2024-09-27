@@ -40,8 +40,8 @@ class QuotesViewModel @Inject constructor(
 
 
     init {
-        getRandomQuote()
-        checkQuote()
+        //getRandomQuote()
+        //checkQuote()
     }
 
 
